@@ -22,7 +22,7 @@
             flex-direction: column;
             align-items: center;
             position: relative; /* Allow positioning of the pseudo-element */
-            overflow: auto;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         body::before {
@@ -40,18 +40,39 @@
 
         .logo {
             width: 80px; /* Default width */
-            margin: 10px 0; /* Add some vertical margin */
+            margin: 10px auto; /* Center the logo */
+        }
+
+        .popup {
+            position: fixed;
+            top: 50%;   /* Center vertically */
+            left: 50%;  /* Center horizontally */
+            transform: translate(-50%, -50%); /* Adjust for the element's own size */
+            background-color: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Above other content */
+            transition: opacity 0.5s ease, top 0.5s ease; /* Smooth appearance */
         }
 
         @media (max-width: 480px) {
             .logo {
                 width: 60px; /* Smaller width for mobile */
-                margin: 5px auto; /* Center the logo and reduce margin */
-                display: block; /* Center the logo by changing to block */
+                margin: 5px auto; /* Center the logo */
             }
 
             .container {
-                padding-top: 70px; /* Add padding to the top of the container to account for the logo */
+                padding-top: 20px; /* Add padding to the top of the container to account for the logo */
+            }
+
+            .name {
+                font-size: 8px; /* Smaller font size for mobile */
+            }
+
+            .random-btn {
+                width: 100%; /* Ensure button takes full width */
             }
         }
 
@@ -60,12 +81,12 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            width: 100%;
-            max-width: 800px;
+            justify-content: space-between; /* Align columns horizontally */
+            flex-wrap: wrap; /* Allow wrapping */
+            width: 100%; /* Full width */
+            max-width: 100vw; /* Ensure it does not exceed the viewport width */
             padding: 15px;
-            margin: 20px auto;
+            margin: 0; /* Remove margins */
             position: relative; /* Add this to ensure the container remains above the blurred background */
             z-index: 1; /* Ensure it appears above the blurred background */
         }
@@ -184,26 +205,26 @@
         @media (max-width: 768px) {
             .group-column,
             .pair-column {
-                width: 100%;
+                width: 100%; /* Full width on smaller screens */
             }
 
             #group1,
             #group2 {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(2, 1fr); /* Adjust grid for smaller screens */
             }
         }
 
         @media (max-width: 480px) {
             .random-btn {
-                width: 100%;
+                width: 100%; /* Full width for buttons on mobile */
             }
 
             .name {
-                font-size: 9px;
+                font-size: 9px; /* Adjust font size for mobile */
             }
 
             .final-group-header {
-                font-size: 12px;
+                font-size: 12px; /* Font size for final group header on mobile */
             }
         }
 
@@ -219,6 +240,8 @@
 
 <body>
     <img src="MPL_Logo.png" class="logo" alt="Logo">
+    <div class="popup" id="popup"></div> <!-- Popup notification div -->
+    
     <div class="container">
         <div class="group-column">
             <button class="random-btn" onclick="randomPair()" id="randomButton">
@@ -237,23 +260,30 @@
     <div id="finalGroups" class="final-groups-container" style="display: none;"></div>
 
     <script>
-        // Define names for pairing
+        // Shuffle Function
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+        }
+
+        // Define names for pairing and shuffle them
         const names1 = ["Andy Shard", "Barry Buckley", "Carl Meehan", "Dave Cobey", "Dave Leishman", "Eddie Williams", "Eric Simpson", "Jon Meehan", "Jon Sellars", "Lewis Ditchfield", "Liam Cox", "Maddy Wilkinson", "Marc Corbett", "Paul Barton", "Paul Snape AKA snap", "Pete Eccles", "Rob Sheldon", "Roy Whyatt", "Steve Hilditch", "Will Bell"];
         const names2 = ["Ash Rigby", "Bob Moody", "Brad Newton", "Brad Oldman", "Caroline Malkin", "Catherine Raybould", "Conor Smith", "Dave Moss", "David Thomas", "Ian Barton", "Ian Clarke", "Ian Jackson", "James Dale", "Jason Tunnicliffe", "Lesley Eccles", "Maria Snape", "Matt Furnivall", "Matt Mason", "Matty Barber", "Wendy Tomkinson"];
+
+        // Shuffle the names
+        shuffle(names1);
+        shuffle(names2);
 
         // DOM elements
         const group1 = document.getElementById('group1');
         const group2 = document.getElementById('group2');
         const pairList = document.getElementById('pairList');
         const randomButton = document.getElementById('randomButton');
+        const popup = document.getElementById('popup'); // Pop-up element
 
-        // Pairs tracking variables
-        let selectedNames = [];
-        let pairedNames = new Set();
-        let pairCount = 0;
-        const groups = ['Group A', 'Group B', 'Group C', 'Group D'];
-
-        // Initialize groups
+        // Initialize groups with shuffled names
         names1.forEach(name => createNameElement(name, group1));
         names2.forEach(name => createNameElement(name, group2));
 
@@ -267,6 +297,11 @@
         }
 
         // Handle name selection
+        let selectedNames = [];
+        let pairedNames = new Set();
+        let pairCount = 0;
+        const groups = ['Group A', 'Group B', 'Group C', 'Group D'];
+
         function selectName(name, element) {
             if (selectedNames.includes(name) || pairedNames.has(name)) return;
             selectedNames.push(name);
@@ -277,7 +312,6 @@
             }
         }
 
-        // Add pair to the paired list
         function addPair(names) {
             const seed = Math.floor(Math.random() * 10000);
             const pairBgColor = ['#e7f1ff', '#f0f9eb', '#fff5e6', '#fef9db'][Math.floor(pairCount / 5)];
@@ -304,10 +338,27 @@
             });
 
             pairCount++;
+
+            // Show pop-up notification
+            showPopup(`Paired: ${names[0]} & ${names[1]}`);
+
             checkAllPaired();
         }
 
-        // Create a new grouping container
+        // Function to show the pop-up notification
+        function showPopup(message) {
+            popup.textContent = message; // Set the message
+            popup.style.display = 'block'; // Show the popup
+            popup.style.opacity = 1; // Set opacity to fully visible
+            // Hide the popup after 3 seconds
+            setTimeout(() => {
+                popup.style.opacity = 0; // Fade out
+                setTimeout(() => {
+                    popup.style.display = 'none'; // Hide completely
+                }, 500); // Wait for fade-out to complete before hiding
+            }, 3000); // Display for 3 seconds
+        }
+
         function createGroupDiv() {
             const groupDiv = document.createElement('div');
             groupDiv.className = 'group';
@@ -316,7 +367,6 @@
             return groupDiv;
         }
 
-        // Remove a pair from the list
         function removePair(pairDiv, names, groupDiv) {
             groupDiv.removeChild(pairDiv);
             pairedNames.delete(names[0]);
@@ -332,15 +382,12 @@
             pairCount--;
         }
 
-        // Randomly pair names and highlight them
         function randomPair() {
-            // Disable button to prevent multiple clicks
             randomButton.disabled = true;
 
             const availableNames1 = names1.filter(name => !pairedNames.has(name));
             const availableNames2 = names2.filter(name => !pairedNames.has(name));
 
-            // Ensure there are available names to pair
             if (availableNames1.length === 0 || availableNames2.length === 0) {
                 randomButton.disabled = false; // Re-enable button
                 return alert("No more available names to pair.");
@@ -372,7 +419,6 @@
             interval = setInterval(highlightNames, 300);
         }
 
-        // Check if all names have been paired
         function checkAllPaired() {
             if (pairCount === names1.length) {
                 document.querySelector('.container').style.display = 'none';
@@ -381,7 +427,6 @@
             }
         }
 
-        // Display final groups after pairing
         function displayFinalGroups() {
             document.querySelectorAll('.pair-column')[0].style.display = 'none';
             document.getElementById('finalGroups').style.display = 'grid';
