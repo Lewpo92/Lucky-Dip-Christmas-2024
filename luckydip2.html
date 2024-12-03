@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Pairing</title>
+    <style>
+        body, .container, .group-column, .pair-column, .name, .pair {
+            background: rgba(240, 240, 240, 0.8); 
+            border: 1px solid #ccc; 
+            border-radius: 10px; 
+            padding: 20px; 
+            margin: 0; 
+            font-family: 'Arial', sans-serif;
+        }
+        body { 
+            background: #f4f4f9 url('four_leaf_clover.png') fixed; 
+            color: #333; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        .container { 
+            display: flex; 
+            justify-content: space-between; 
+            flex-wrap: wrap; 
+            width: 90%; 
+            max-width: 1200px; 
+            margin: 20px 0; 
+            background: rgba(255, 255, 255, 0.9); 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }
+        .group-column, .pair-column { 
+            width: 45%; 
+            display: flex; 
+            flex-direction: column; 
+            margin: 10px 0; 
+        }
+        .group-header { 
+            text-align: center; 
+            font-weight: bold; 
+            margin-bottom: 10px; 
+        }
+        .random-btn { 
+            margin-bottom: 20px; 
+            padding: 10px 20px; 
+            background: #007bff; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            color: #fff; 
+            transition: background-color 0.3s; 
+        }
+        .random-btn:hover { 
+            background: #0056b3; 
+        }
+        #group1, #group2 { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px; 
+        }
+        .name { 
+            cursor: pointer; 
+            transition: background-color 0.3s, border-color 0.3s; 
+            font-size: 14px; 
+            text-align: center; 
+            border: 2px solid #ccc; 
+            border-radius: 5px; 
+        }
+        .name:hover { 
+            background: #e0e0e0; 
+        }
+        .highlight { 
+            background: gold !important; 
+            color: #000; 
+        }
+        .remove { 
+            cursor: pointer; 
+            color: #dc3545; 
+            font-weight: bold; 
+            margin-left: 10px; 
+            font-size: 12px; 
+        }
+        .final-groups-container { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 20px; 
+            width: 100%; 
+        }
+        .group { 
+            margin-bottom: 20px; 
+        }
+        .final-group-header { 
+            background-color: rgba(0, 0, 0, 0.3); 
+            color: #fff; 
+        }
+        .logo { 
+            position: absolute; 
+            top: 10px; 
+            right: 10px; 
+            width: 100px; 
+        }
+
+        @media (max-width: 768px) {
+            .group-column, .pair-column { 
+                width: 100%; 
+                margin: 10px 0; 
+            }
+            #group1, #group2 { 
+                grid-template-columns: repeat(2, 1fr); /* Two columns on smaller screens */ 
+            }
+        }
+
+        @media (max-width: 480px) {
+            .random-btn { 
+                width: 100%; /* Full width button on small screens */ 
+            }
+            .name { 
+                font-size: 12px; /* Smaller font size on very small screens */
+            }
+            .final-group-header { 
+                font-size: 1em; /* Adjust header size for smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="MPL_Logo.png" class="logo" alt="Logo">
+    <div class="container">
+        <div class="group-column">
+            <button class="random-btn" onclick="randomPair()">Randomly Pick Names</button>
+            <h3 class="group-header">Pro's</h3>
+            <div id="group1"></div>
+            <h3 class="group-header">Amateur's</h3>
+            <div id="group2"></div>
+        </div>
+        <div class="pair-column">
+            <h2 class="group-header">Paired Names:</h2>
+            <div id="pairList"></div>
+        </div>
+    </div>
+    <div id="finalGroups" class="final-groups-container" style="display: none;"></div>
+    <script>
+        const names1 = ["Andy Shard", "Barry Buckley", "Carl Meehan", "Dave Cobey", "Dave Leishman", "Eddie Williams", "Eric Simpson", "Jon Meehan", "Jon Sellars", "Lewis Ditchfield", "Liam Cox", "Maddy Wilkinson", "Marc Corbett", "Paul Barton", "Paul Snape AKA snap", "Pete Eccles", "Rob Sheldon", "Roy Whyatt", "Steve Hilditch", "Will Bell"]; 
+        const names2 = ["Ash Rigby", "Bob Moody", "Brad Newton", "Brad Oldman", "Caroline Malkin", "Catherine Raybould", "Conor Smith", "Dave Moss", "David Thomas", "Ian Barton", "Ian Clarke", "Ian Jackson", "James Dale", "Jason Tunnicliffe", "Lesley Eccles", "Maria Snape", "Matt Furnivall", "Matt Mason", "Matty Barber", "Wendy Tomkinson"];
+        
+        const group1 = document.getElementById('group1'), 
+              group2 = document.getElementById('group2'), 
+              pairList = document.getElementById('pairList');
+        let selectedNames = [], pairedNames = new Set(), pairCount = 0, groups = ['Group A', 'Group B', 'Group C', 'Group D'];
+
+        names1.forEach(name => createNameElement(name, group1));
+        names2.forEach(name => createNameElement(name, group2));
+
+        function createNameElement(name, group) {
+            const nameDiv = document.createElement('div');
+            nameDiv.className = 'name';
+            nameDiv.textContent = name;
+            nameDiv.onclick = () => selectName(name, nameDiv);
+            group.appendChild(nameDiv);
+        }
+
+        function selectName(name, element) {
+            if (selectedNames.includes(name) || pairedNames.has(name)) return;
+            selectedNames.push(name);
+            element.classList.add('selected');
+            if (selectedNames.length === 2) {
+                addPair(selectedNames);
+                selectedNames = [];
+            }
+        }
+
+        function addPair(names) {
+            const seed = Math.floor(Math.random() * 10000), 
+                  pairBgColor = ['#ffcccc', '#cce0ff', '#ccffcc', '#ffffcc'][Math.floor(pairCount / 5)];
+            let groupDiv = pairCount % 5 === 0 ? createGroupDiv() : pairList.lastElementChild;
+            const pairDiv = document.createElement('div');
+            pairDiv.className = 'pair';
+            pairDiv.textContent = `${names[0]} & ${names[1]} (Seed: ${seed})`; 
+            pairDiv.style.backgroundColor = pairBgColor;
+
+            const removeButton = document.createElement('span');
+            removeButton.textContent = 'Remove'; 
+            removeButton.className = 'remove'; 
+            removeButton.onclick = () => removePair(pairDiv, names, groupDiv);
+            pairDiv.appendChild(removeButton);
+            groupDiv.appendChild(pairDiv);
+            pairedNames.add(names[0]); 
+            pairedNames.add(names[1]);
+
+            document.querySelectorAll('.name').forEach(el => {
+                if ([names[0], names[1]].includes(el.textContent)) 
+                    el.style.backgroundColor = pairBgColor;
+            });
+
+            pairCount++; 
+            checkAllPaired();
+        }
+
+        function createGroupDiv() {
+            const groupDiv = document.createElement('div');
+            groupDiv.className = 'group';
+            groupDiv.innerHTML = `<h3 class="final-group-header">${groups[Math.floor(pairCount / 5)]}</h3>`;
+            pairList.appendChild(groupDiv);
+            return groupDiv;
+        }
+
+        function removePair(pairDiv, names, groupDiv) {
+            groupDiv.removeChild(pairDiv);
+            pairedNames.delete(names[0]); 
+            pairedNames.delete(names[1]);
+            document.querySelectorAll('.name').forEach(el => {
+                if ([names[0], names[1]].includes(el.textContent)) 
+                    el.style.backgroundColor = '';
+            });
+
+            if (groupDiv.children.length === 1) 
+                pairList.removeChild(groupDiv);
+            pairCount--;
+        }
+
+        function randomPair() {
+            const availableNames1 = names1.filter(name => !pairedNames.has(name)),
+                  availableNames2 = names2.filter(name => !pairedNames.has(name));
+            if (availableNames1.length === 0 || availableNames2.length === 0) 
+                return alert("No more available names to pair.");
+
+            let highlightCount = 0, interval;
+            function highlightNames() {
+                document.querySelectorAll('.name').forEach(el => el.classList.remove('highlight'));
+                const randomIndex1 = Math.floor(Math.random() * availableNames1.length), 
+                      randomIndex2 = Math.floor(Math.random() * availableNames2.length);
+                document.querySelectorAll('.name')[names1.indexOf(availableNames1[randomIndex1])].classList.add('highlight');
+                document.querySelectorAll('.name')[names2.indexOf(availableNames2[randomIndex2]) + names1.length].classList.add('highlight');
+                highlightCount++;
+                if (highlightCount >= 5) {
+                    clearInterval(interval); 
+                    document.querySelectorAll('.name').forEach(el => el.classList.remove('highlight'));
+                    addPair([availableNames1[randomIndex1], availableNames2[randomIndex2]]);
+                }
+            }
+            interval = setInterval(highlightNames, 300);
+        }
+
+        function checkAllPaired() {
+            if (pairCount === names1.length) {
+                document.querySelector('.group-column').style.display = 'none';
+                document.querySelectorAll('.pair-column h2')[0].innerHTML = "Final Groups";
+                displayFinalGroups();
+            }
+        }
+
+        function displayFinalGroups() {
+            document.querySelectorAll('.pair-column')[0].style.display = 'none'; 
+            document.getElementById('finalGroups').style.display = 'grid'; 
+            groups.forEach((group, index) => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'group'; 
+                groupDiv.innerHTML = `<h3 class="final-group-header">${group}</h3>`;
+                document.querySelectorAll('.group')[index].querySelectorAll('.pair').forEach(pair => {
+                    groupDiv.appendChild(pair);
+                });
+                document.getElementById('finalGroups').appendChild(groupDiv);
+            });
+        }
+    </script>
+</body>
+</html>
