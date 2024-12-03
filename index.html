@@ -38,6 +38,23 @@
             z-index: -1; /* Ensure it stays behind the content */
         }
 
+        .logo {
+            width: 80px; /* Default width */
+            margin: 10px 0; /* Add some vertical margin */
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                width: 60px; /* Smaller width for mobile */
+                margin: 5px auto; /* Center the logo and reduce margin */
+                display: block; /* Center the logo by changing to block */
+            }
+
+            .container {
+                padding-top: 70px; /* Add padding to the top of the container to account for the logo */
+            }
+        }
+
         .container {
             background: rgba(255, 255, 255, 0.9); /* Keep existing container settings */
             border-radius: 12px;
@@ -162,21 +179,6 @@
             margin-bottom: 6px;
             border-bottom: 1px solid #e0e0e0;
             padding-bottom: 4px;
-        }
-
-        .logo {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 80px; /* Default width */
-        }
-
-        @media (max-width: 480px) {
-            .logo {
-                width: 60px; /* Smaller width for mobile */
-                top: 5px; /* Adjust top position for smaller screens */
-                right: 5px; /* Adjust right position for smaller screens */
-            }
         }
 
         @media (max-width: 768px) {
