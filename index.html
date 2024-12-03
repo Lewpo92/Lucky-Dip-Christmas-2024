@@ -57,27 +57,8 @@
             transition: opacity 0.5s ease, top 0.5s ease; /* Smooth appearance */
         }
 
-        @media (max-width: 480px) {
-            .logo {
-                width: 60px; /* Smaller width for mobile */
-                margin: 5px auto; /* Center the logo */
-            }
-
-            .container {
-                padding-top: 20px; /* Add padding to the top of the container to account for the logo */
-            }
-
-            .name {
-                font-size: 8px; /* Smaller font size for mobile */
-            }
-
-            .random-btn {
-                width: 100%; /* Ensure button takes full width */
-            }
-        }
-
         .container {
-            background: rgba(255, 255, 255, 0.9); /* Keep existing container settings */
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -147,19 +128,19 @@
 
         .name {
             cursor: pointer;
-            transition: background-color 0.3s, box-shadow 0.3s; /* Include box-shadow in transition */
+            transition: background-color 0.3s, box-shadow 0.3s;
             font-size: 10px;
             text-align: center;
             padding: 6px;
             background: #ffffff;
             border: none;
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added small drop shadow */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .name:hover {
             background: #f8f9fa;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         .highlight {
@@ -180,6 +161,7 @@
             grid-template-columns: 1fr;
             gap: 10px;
             width: 100%;
+            max-width: 800px; /* Limit width to fit standard pages */
             margin-top: 60px;
             background: #ffffff;
             border-radius: 10px;
@@ -235,12 +217,73 @@
             margin: 2px 0;
             font-size: 10px;
         }
+        
+        /* Print Styles */
+        @media print {
+            body {
+                background: none; /* Remove background for printing */
+                color: black; /* Ensure text is black */
+                font-size: 10px; /* Decrease font size for printing */
+                margin: 0; /* Remove margin */
+                padding: 0; /* Remove padding */
+            }
+
+            .container {
+                padding: 0; /* Remove padding for print */
+                box-shadow: none; /* Remove shadow */
+                max-width: 100%; /* Full width */
+                width: 100%;
+            }
+
+            .final-groups-container {
+                display: block; /* Ensure blocks on print */
+                max-width: 100%; /* Limit width to fit page */
+            }
+
+            .final-group-header {
+                page-break-inside: avoid; /* Prevent breaking inside a group */
+                font-size: 12px; /* Smaller font for headers */
+            }
+
+            .random-btn, .remove {
+                display: none; /* Hide buttons during printing */
+            }
+
+            .pair {
+                margin: 2px 0; /* Add margin between printed pairs */
+                page-break-inside: avoid; /* Prevent pairs from breaking */
+                padding: 3px; /* Reduce padding */
+                font-size: 9px; /* Smaller font size */
+            }
+
+            #finalGroups {
+                page-break-after: auto; /* Allow breaks after groups */
+                text-align: center; /* Center contents */
+                margin: 0 auto; /* Center the container */
+            }
+
+            /* Reducing the sizes of elements further */
+            .group {
+                page-break-inside: avoid; /* Prevent group breaking across pages */
+                margin-bottom: 10px; /* Space between groups */
+            }
+
+            /* Adjust the grid for printed output */
+            #group1, #group2 {
+                display: block; /* Stack items vertically */
+            }
+
+            .group-column, .pair-column {
+                width: auto; /* Auto width for stack */
+                display: block; /* Block display for printing */
+            }
+        }
     </style>
 </head>
 
 <body>
     <img src="MPL_Logo.png" class="logo" alt="Logo">
-    <div class="popup" id="popup"></div> <!-- Popup notification div -->
+    <div class="popup" id="popup"></div>
     
     <div class="container">
         <div class="group-column">
@@ -281,7 +324,7 @@
         const group2 = document.getElementById('group2');
         const pairList = document.getElementById('pairList');
         const randomButton = document.getElementById('randomButton');
-        const popup = document.getElementById('popup'); // Pop-up element
+        const popup = document.getElementById('popup');
 
         // Initialize groups with shuffled names
         names1.forEach(name => createNameElement(name, group1));
@@ -345,18 +388,16 @@
             checkAllPaired();
         }
 
-        // Function to show the pop-up notification
         function showPopup(message) {
-            popup.textContent = message; // Set the message
-            popup.style.display = 'block'; // Show the popup
-            popup.style.opacity = 1; // Set opacity to fully visible
-            // Hide the popup after 3 seconds
+            popup.textContent = message;
+            popup.style.display = 'block';
+            popup.style.opacity = 1;
             setTimeout(() => {
-                popup.style.opacity = 0; // Fade out
+                popup.style.opacity = 0;
                 setTimeout(() => {
-                    popup.style.display = 'none'; // Hide completely
-                }, 500); // Wait for fade-out to complete before hiding
-            }, 3000); // Display for 3 seconds
+                    popup.style.display = 'none';
+                }, 500);
+            }, 3000);
         }
 
         function createGroupDiv() {
@@ -429,7 +470,7 @@
 
         function displayFinalGroups() {
             document.querySelectorAll('.pair-column')[0].style.display = 'none';
-            document.getElementById('finalGroups').style.display = 'grid';
+            document.getElementById('finalGroups').style.display = 'block';
 
             groups.forEach((group, index) => {
                 const groupDiv = document.createElement('div');
