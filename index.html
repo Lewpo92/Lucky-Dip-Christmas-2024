@@ -6,55 +6,99 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random Pairing</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-+YyZqeZ7Rv1gV3B/2L1WKnSUujMkF0M7fjmuYpVuujHH5OW3iAt9xInfy60/kh2oEG+pk2SV1zpj+heOjx+0Cg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <style>
-        html, body {
-            height: 100%; /* Ensure the html and body take the full height */
-            margin: 0; /* Remove default margin */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
         }
 
         body {
             padding: 10px;
-            font-family: 'Poppins', sans-serif; /* Updated font family */
+            font-family: 'Poppins', sans-serif;
             color: #333;
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative; /* Allow positioning of the pseudo-element */
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            position: relative;
+            overflow-x: hidden;
+            background-image: url('four_leaf_clover.png'); /* Adjust the path as needed */
+            background-size: cover; /* Makes the image cover the entire viewport */
+            background-repeat: no-repeat; /* Prevents the image from repeating */
+            background-position: center; /* Centers the background image */
         }
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center aligns header items */
             width: 100%;
-            height: 100%;
-            background: url('four_leaf_clover.png') no-repeat center center fixed; /* Set the background image */
-            background-size: cover; /* Cover the entire area */
-            filter: blur(10px); /* Apply blur to the background */
-            z-index: -1; /* Ensure it stays behind the content */
+            margin-bottom: 20px; /* Adjust as needed */
+            flex-wrap: wrap; /* Allow items to wrap on small screens */
+        }
+
+        .text-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 10px; /* Adjust this for more or less padding */
+            background: rgba(255, 255, 255, 0.8); /* Optional background color */
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow */
+            margin: 5px; /* Space between text and logo */
+        }
+
+        .header-text {
+            font-size: 18px; /* Default size */
+            font-weight: bold; /* Make text bold */
+            color: #28a745; /* Changed font color to green */
+            text-align: center; /* Center text */
+        }
+
+        .header-text i {
+            margin-left: 5px; /* Space between text and icon */
+            font-size: 1.2em; /* Adjust size of the icon */
+        }
+
+        @media (max-width: 600px) { /* Media query for smaller screens */
+            .header-text {
+                font-size: 16px; /* Reduce text size for smaller screens */
+            }
+
+            .header-text i {
+                font-size: 1.1em; /* Slightly reduce icon size */
+            }
+        }
+
+        @media (max-width: 400px) { /* Even smaller screens */
+            .header-text {
+                font-size: 14px; /* Further reduce text size */
+            }
+
+            .header-text i {
+                font-size: 1em; /* Further reduce icon size */
+            }
         }
 
         .logo {
-            width: 80px; /* Default width */
-            margin: 10px auto; /* Center the logo */
+            width: 80px;
+            margin: 0 10px; /* Margin around logo */
         }
 
         .popup {
             position: fixed;
-            top: 50%;   /* Center vertically */
-            left: 50%;  /* Center horizontally */
-            transform: translate(-50%, -50%); /* Adjust for the element's own size */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             background-color: rgba(0, 0, 0, 0.75);
             color: white;
             padding: 15px 30px;
             border-radius: 5px;
-            display: none; /* Hidden by default */
-            z-index: 1000; /* Above other content */
-            transition: opacity 0.5s ease, top 0.5s ease; /* Smooth appearance */
+            display: none;
+            z-index: 1000;
+            transition: opacity 0.5s ease, top 0.5s ease;
         }
 
         .container {
@@ -62,14 +106,14 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: flex;
-            justify-content: space-between; /* Align columns horizontally */
-            flex-wrap: wrap; /* Allow wrapping */
-            width: 100%; /* Full width */
-            max-width: 100vw; /* Ensure it does not exceed the viewport width */
+            justify-content: space-between;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 100vw;
             padding: 15px;
-            margin: 0; /* Remove margins */
-            position: relative; /* Add this to ensure the container remains above the blurred background */
-            z-index: 1; /* Ensure it appears above the blurred background */
+            margin: 0;
+            position: relative;
+            z-index: 1;
         }
 
         .group-column,
@@ -90,6 +134,10 @@
             padding-bottom: 4px;
         }
 
+        .pair-column .group-header {
+            font-size: 24px; /* Increased size for paired names header */
+        }
+
         .random-btn {
             margin-bottom: 10px;
             padding: 6px 12px;
@@ -97,7 +145,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 24px; /* Doubled size for button text */
             color: #fff;
             transition: background-color 0.3s, transform 0.3s;
             display: flex;
@@ -111,11 +159,16 @@
         }
 
         .random-btn:disabled {
-            background: #b2d0b2; /* Grey out when disabled */
+            background: #b2d0b2;
             cursor: not-allowed;
         }
 
+        .fas {
+            font-size: 2em;
+        }
+
         .random-btn i {
+            font-size: 1.5em;
             margin-right: 5px;
         }
 
@@ -127,7 +180,6 @@
         }
 
         .name {
-            cursor: pointer;
             transition: background-color 0.3s, box-shadow 0.3s;
             font-size: 10px;
             text-align: center;
@@ -138,22 +190,9 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .name:hover {
-            background: #f8f9fa;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        }
-
         .highlight {
             background: gold !important;
             color: #000;
-        }
-
-        .remove {
-            cursor: pointer;
-            color: #dc3545;
-            font-weight: bold;
-            font-size: 9px;
-            margin-left: 6px;
         }
 
         .final-groups-container {
@@ -161,7 +200,7 @@
             grid-template-columns: 1fr;
             gap: 10px;
             width: 100%;
-            max-width: 800px; /* Limit width to fit standard pages */
+            max-width: 800px;
             margin-top: 60px;
             background: #ffffff;
             border-radius: 10px;
@@ -187,108 +226,109 @@
         @media (max-width: 768px) {
             .group-column,
             .pair-column {
-                width: 100%; /* Full width on smaller screens */
+                width: 100%;
             }
 
             #group1,
             #group2 {
-                grid-template-columns: repeat(2, 1fr); /* Adjust grid for smaller screens */
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 480px) {
             .random-btn {
-                width: 100%; /* Full width for buttons on mobile */
+                width: 100%;
             }
 
             .name {
-                font-size: 9px; /* Adjust font size for mobile */
+                font-size: 9px;
             }
 
             .final-group-header {
-                font-size: 12px; /* Font size for final group header on mobile */
+                font-size: 12px;
             }
         }
 
-        .pair {
-            padding: 6px;
-            border-radius: 5px;
-            transition: transform 0.2s;
-            margin: 2px 0;
-            font-size: 10px;
-        }
-        
-        /* Print Styles */
         @media print {
             body {
-                background: none; /* Remove background for printing */
-                color: black; /* Ensure text is black */
-                font-size: 10px; /* Decrease font size for printing */
-                margin: 0; /* Remove margin */
-                padding: 0; /* Remove padding */
+                background: none;
+                color: black;
+                font-size: 10px;
+                margin: 0;
+                padding: 0;
             }
 
             .container {
-                padding: 0; /* Remove padding for print */
-                box-shadow: none; /* Remove shadow */
-                max-width: 100%; /* Full width */
+                padding: 0;
+                box-shadow: none;
+                max-width: 100%;
                 width: 100%;
             }
 
             .final-groups-container {
-                display: block; /* Ensure blocks on print */
-                max-width: 100%; /* Limit width to fit page */
+                display: block;
+                max-width: 100%;
             }
 
             .final-group-header {
-                page-break-inside: avoid; /* Prevent breaking inside a group */
-                font-size: 12px; /* Smaller font for headers */
+                page-break-inside: avoid;
+                font-size: 12px;
             }
 
-            .random-btn, .remove {
-                display: none; /* Hide buttons during printing */
+            .random-btn,
+            .remove {
+                display: none;
             }
 
             .pair {
-                margin: 2px 0; /* Add margin between printed pairs */
-                page-break-inside: avoid; /* Prevent pairs from breaking */
-                padding: 3px; /* Reduce padding */
-                font-size: 9px; /* Smaller font size */
+                margin: 2px 0;
+                page-break-inside: avoid;
+                padding: 3px;
+                font-size: 9px;
             }
 
             #finalGroups {
-                page-break-after: auto; /* Allow breaks after groups */
-                text-align: center; /* Center contents */
-                margin: 0 auto; /* Center the container */
+                page-break-after: auto;
+                text-align: center;
+                margin: 0 auto;
             }
 
-            /* Reducing the sizes of elements further */
             .group {
-                page-break-inside: avoid; /* Prevent group breaking across pages */
-                margin-bottom: 10px; /* Space between groups */
+                page-break-inside: avoid;
+                margin-bottom: 10px;
             }
 
-            /* Adjust the grid for printed output */
-            #group1, #group2 {
-                display: block; /* Stack items vertically */
+            #group1,
+            #group2 {
+                display: block;
             }
 
-            .group-column, .pair-column {
-                width: auto; /* Auto width for stack */
-                display: block; /* Block display for printing */
+            .group-column,
+            .pair-column {
+                width: auto;
+                display: block;
             }
         }
     </style>
 </head>
 
 <body>
-    <img src="MPL_Logo.png" class="logo" alt="Logo">
+    <div class="header">
+        <div class="text-container" id="left-text-container">
+            <span class="header-text" id="left-text">Lucky Dip <i class="fas fa-clover"></i></span>
+        </div>
+        <img src="MPL_Logo.png" class="logo" alt="Logo">
+        <div class="text-container" id="right-text-container">
+            <span class="header-text" id="right-text">Christmas 2024</span>
+        </div>
+    </div>
+
     <div class="popup" id="popup"></div>
-    
+
     <div class="container">
         <div class="group-column">
             <button class="random-btn" onclick="randomPair()" id="randomButton">
-                <i class="fas fa-dice"></i> Randomly Pick Names
+                <i class="fas fa-dice"></i> Random Pair Generator
             </button>
             <h3 class="group-header">Pro's</h3>
             <div id="group1"></div>
@@ -307,53 +347,40 @@
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+                [array[i], array[j]] = [array[j], array[i]];
             }
         }
 
-        // Define names for pairing and shuffle them
-        const names1 = ["Andy Shard", "Barry Buckley", "Carl Meehan", "Dave Cobey", "Dave Leishman", "Eddie Williams", "Eric Simpson", "Jon Meehan", "Jon Sellars", "Lewis Ditchfield", "Liam Cox", "Maddy Wilkinson", "Marc Corbett", "Paul Barton", "Paul Snape AKA snap", "Pete Eccles", "Rob Sheldon", "Roy Whyatt", "Steve Hilditch", "Will Bell"];
-        const names2 = ["Ash Rigby", "Bob Moody", "Brad Newton", "Brad Oldman", "Caroline Malkin", "Catherine Raybould", "Conor Smith", "Dave Moss", "David Thomas", "Ian Barton", "Ian Clarke", "Ian Jackson", "James Dale", "Jason Tunnicliffe", "Lesley Eccles", "Maria Snape", "Matt Furnivall", "Matt Mason", "Matty Barber", "Wendy Tomkinson"];
+        const names1 = ["Andy Shard", "Barry Buckley", "Carl Meehan", "Dave Cobey", "Dave Leishman", "Eddie Williams",
+            "Eric Simpson", "Jon Meehan", "Jon Sellars", "Lewis Ditchfield", "Liam Cox", "Maddy Wilkinson",
+            "Marc Corbett", "Paul Barton", "Paul Snape AKA snap", "Pete Eccles", "Rob Sheldon", "Roy Whyatt",
+            "Steve Hilditch", "Will Bell"];
+        const names2 = ["Ash Rigby", "Bob Moody", "Brad Newton", "Brad Oldman", "Caroline Malkin", "Catherine Raybould",
+            "Conor Smith", "Dave Moss", "David Thomas", "Ian Barton", "Ian Clarke", "Ian Jackson", "James Dale",
+            "Jason Tunnicliffe", "Lesley Eccles", "Maria Snape", "Matt Furnivall", "Matt Mason", "Matty Barber", "Wendy Tomkinson"];
 
-        // Shuffle the names
         shuffle(names1);
         shuffle(names2);
 
-        // DOM elements
         const group1 = document.getElementById('group1');
         const group2 = document.getElementById('group2');
         const pairList = document.getElementById('pairList');
         const randomButton = document.getElementById('randomButton');
         const popup = document.getElementById('popup');
 
-        // Initialize groups with shuffled names
         names1.forEach(name => createNameElement(name, group1));
         names2.forEach(name => createNameElement(name, group2));
 
-        // Create name element
         function createNameElement(name, group) {
             const nameDiv = document.createElement('div');
             nameDiv.className = 'name';
             nameDiv.textContent = name;
-            nameDiv.onclick = () => selectName(name, nameDiv);
             group.appendChild(nameDiv);
         }
 
-        // Handle name selection
-        let selectedNames = [];
         let pairedNames = new Set();
         let pairCount = 0;
         const groups = ['Group A', 'Group B', 'Group C', 'Group D'];
-
-        function selectName(name, element) {
-            if (selectedNames.includes(name) || pairedNames.has(name)) return;
-            selectedNames.push(name);
-            element.classList.add('selected');
-            if (selectedNames.length === 2) {
-                addPair(selectedNames);
-                selectedNames = [];
-            }
-        }
 
         function addPair(names) {
             const seed = Math.floor(Math.random() * 10000);
@@ -382,7 +409,6 @@
 
             pairCount++;
 
-            // Show pop-up notification
             showPopup(`Paired: ${names[0]} & ${names[1]}`);
 
             checkAllPaired();
@@ -430,7 +456,7 @@
             const availableNames2 = names2.filter(name => !pairedNames.has(name));
 
             if (availableNames1.length === 0 || availableNames2.length === 0) {
-                randomButton.disabled = false; // Re-enable button
+                randomButton.disabled = false;
                 return alert("No more available names to pair.");
             }
 
@@ -439,7 +465,7 @@
 
             function highlightNames() {
                 document.querySelectorAll('.name').forEach(el => el.classList.remove('highlight'));
-                
+
                 const randomIndex1 = Math.floor(Math.random() * availableNames1.length);
                 const randomIndex2 = Math.floor(Math.random() * availableNames2.length);
 
@@ -454,7 +480,7 @@
                     clearInterval(interval);
                     document.querySelectorAll('.name').forEach(el => el.classList.remove('highlight'));
                     addPair([selectedName1, selectedName2]);
-                    randomButton.disabled = false; // Re-enable button after selection is done
+                    randomButton.disabled = false;
                 }
             }
             interval = setInterval(highlightNames, 300);
