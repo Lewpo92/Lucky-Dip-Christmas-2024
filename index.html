@@ -24,7 +24,7 @@
             align-items: center;
             position: relative;
             overflow-x: hidden;
-            background-image: url('four_leaf_clover.png');
+            background-image: url('Summer_vibes.jpg');
             background-size: cover;
             background-repeat: no-repeat;
             background-position: center;
@@ -53,7 +53,7 @@
         .header-text {
             font-size: 18px;
             font-weight: bold;
-            color: #28a745;
+            color: #ffc107;
             text-align: center;
         }
 
@@ -128,9 +128,9 @@
             text-align: center;
             font-weight: 600;
             font-size: 14px;
-            color: #28a745;
+            color: #ffc107;
             margin-bottom: 8px;
-            border-bottom: 1px solid #28a745;
+            border-bottom: 1px solid #ffc107;
             padding-bottom: 4px;
         }
 
@@ -141,7 +141,7 @@
         .random-btn {
             margin-bottom: 10px;
             padding: 6px 12px;
-            background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+            background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -154,12 +154,12 @@
         }
 
         .random-btn:hover {
-            background: #218838;
+            background: #e0a800;
             transform: translateY(-1px);
         }
 
         .random-btn:disabled {
-            background: #b2d0b2;
+            background: #fff3cd;
             cursor: not-allowed;
         }
 
@@ -217,7 +217,7 @@
 
         .final-group-header {
             font-size: 14px;
-            color: #28a745;
+            color: #ffc107;
             margin-bottom: 6px;
             border-bottom: 1px solid #e0e0e0;
             padding-bottom: 4px;
@@ -315,11 +315,11 @@
 <body>
     <div class="header">
         <div class="text-container" id="left-text-container">
-            <span class="header-text" id="left-text">Lucky Dip <i class="fas fa-clover"></i></span>
+            <span class="header-text" id="left-text">Lucky Dip <i class="fas fa-sun"></i></span>
         </div>
         <img src="MPL_Logo.png" class="logo" alt="Logo">
         <div class="text-container" id="right-text-container">
-            <span class="header-text" id="right-text">Christmas 2024</span>
+            <span class="header-text" id="right-text">Summer 2025</span>
         </div>
     </div>
 
@@ -330,9 +330,9 @@
             <button class="random-btn" onclick="randomPair()" id="randomButton">
                 <i class="fas fa-dice"></i> Random Pair Generator
             </button>
-            <h3 class="group-header">Pro's</h3>
+            <h3 class="group-header">Group A</h3>
             <div id="group1"></div>
-            <h3 class="group-header">Amateur's</h3>
+            <h3 class="group-header">Group B</h3>
             <div id="group2"></div>
         </div>
         <div class="pair-column">
@@ -351,13 +351,51 @@
             }
         }
 
-        const names1 = ["Andy Shard", "Barry Buckley", "Carl Meehan", "Dave Cobey", "Dave Leishman", "Eddie Williams",
-            "Eric Simpson", "Dave Hine", "Jon Sellars", "Lewis Ditchfield", "Liam Cox", "Maddy Wilkinson",
-            "Marc Corbett", "Paul Barton", "Paul Snape AKA snap", "Pete Eccles", "Rob Sheldon", "Steve Hilditch", "Will Bell"];
-        
-        const names2 = ["Ash Rigby", "Bob Moody", "Brad Newton", "Caroline Malkin", "Catherine Raybould",
-            "Conor Smith", "James Ellis", "David Thomas", "Ian Barton", "Ian Clarke", "Ian Jackson", "James Dale",
-            "Jason Tunnicliffe", "Lesley Eccles", "Maria Snape", "Matt Furnivall", "Matt Mason", "Matty Barber", "Wendy Tomkinson"];
+        const names1 = [
+  "Alex Middleton",
+  "Andy Shard",
+  "Carl Meehan",
+  "Colin Taylor",
+  "Dave Cobey",
+  "Dave Hine",
+  "Dave Leishman",
+  "Eddie Williams",
+  "Eric Simpson",
+  "Jason Spilsbury",
+  "Lee Holmes",
+  "Lewis Ditchfield",
+  "Maddy Wilkinson",
+  "Marc Corbett",
+  "Matt Beresford",
+  "Nichola Oakes",
+  "Paul Barton",
+  "Paul Snape AKA snap",
+  "Pete Eccles",
+  "John Shea"
+];
+
+const names2 = [
+  "Jay Rawcliffe",
+  "Ash Rigby",
+  "Bob Moody",
+  "Caroline Malkin",
+  "Catherine Raybould",
+  "David Thomas",
+  "Daz Ravenscroft",
+  "Harry Beresford",
+  "Ian Clarke",
+  "Jack Roberts",
+  "Jim Dale",
+  "Joey Davies",
+  "Lesley Eccles",
+  "Liam Cox",
+  "Maria Snape",
+  "Matt Barber",
+  "Michelle Shard",
+  "Mike Penny",
+  "Oliver Hine",
+  "Wendy Tomkinson"
+];
 
         shuffle(names1);
         shuffle(names2);
